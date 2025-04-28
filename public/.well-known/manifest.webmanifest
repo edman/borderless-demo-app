@@ -2,14 +2,22 @@
   "id": "/",
   "scope": "/",
   "start_url": "/",
-  "name": "Borderless IWA with AWC demo",
-  "version": "1.0.0",
+  "name": "Borderless IWA demo",
+  "version": "0.0.0",
   "display": "standalone",
-  "display_override": ["borderless"],
+  "display_override": [
+    "borderless"
+  ],
   "permissions_policy": {
-    "window-management": ["self"],
-    "fullscreen": ["self"],
-    "cross-origin-isolated": ["self"]
+    "window-management": [
+      "self"
+    ],
+    "fullscreen": [
+      "self"
+    ],
+    "cross-origin-isolated": [
+      "self"
+    ]
   },
   "isolated_storage": true,
   "icons": [

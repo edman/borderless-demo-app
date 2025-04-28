@@ -1,0 +1,21 @@
+{
+  "name": "boderless-demo-iwa",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@picocss/pico": "^2.1.1",
+    "dotenv": "^16.5.0",
+    "prettier": "^3.5.3",
+    "rollup": "^4.43.0",
+    "rollup-plugin-webbundle": "^0.2.0",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
+    "vite-plugin-html-inject": "^1.1.2",
+    "wbn-sign": "^0.2.1"
+  }
+}
