@@ -1,18 +1,23 @@
 /* WINDOW-MANAGEMENT PERMISSION THINGS */
-function setWindowPlacementPermissionButton() {
+function setWindowManagementPermissionStatus(status) {
   document
-    .getElementById("window-placement-btn")
-    .addEventListener("click", async (event) => {
-      await window.getScreenDetails();
-    });
+    .getElementById("window-management-status-text")
+    .innerText = status;
 }
+
+function setWindowManagementPermissionButton(isGranted) {
+  const btn = document.getElementById("window-management-btn");
+  btn.addEventListener("click", async (event) => {
+    await window.getScreenDetails();
+  });
+  btn.disabled = isGranted;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  navigator.permissions.query({ name: "window-placement" }).then((status) => {
-    const isGranted = status.state == "granted";
-    if (!isGranted) setWindowPlacementPermissionButton();
-    document.getElementById("window-placement").style.display = isGranted
-      ? "none"
-      : "inline";
+  navigator.permissions.query({ name: "window-management" }).then((status) => {
+    setWindowManagementPermissionStatus(status.state)
+    const isGranted = status.state === "granted";
+    setWindowManagementPermissionButton(isGranted);
   });
 });
 

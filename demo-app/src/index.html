@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -6,7 +6,7 @@
     <script src="index.js" defer></script>
 
     <!-- webpackIgnore: true -->
-    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href=".well-known/manifest.webmanifest" />
   </head>
 
   <body>
@@ -56,10 +56,11 @@
     </header>
 
     <div id="main">
-      <section id="window-placement">
-        <h2>Granting window-placement permission</h2>
-        <button id="window-placement-btn" type="button">Grant</button>
-      </section>
+      <div>
+        <h2>Window-management permission</h2>
+        <p>Status: <span id="window-management-status-text">UNKNOWN</span></p>
+        <button id="window-management-btn" type="button">Grant</button>
+      </div>
 
       <!-- display-state related elements -->
       <h3>display-state CSS testing</h3>
