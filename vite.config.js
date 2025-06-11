@@ -15,15 +15,20 @@
  */
 
 import { defineConfig } from "vite";
-import injectHTML from "vite-plugin-html-inject";
 
-import wbn from "rollup-plugin-webbundle";
-import * as wbnSign from "wbn-sign";
 import dotenv from "dotenv";
+import fs from "fs";
+import wbn from "rollup-plugin-webbundle";
+import injectHTML from "vite-plugin-html-inject";
+import * as wbnSign from "wbn-sign";
 
 dotenv.config();
 
-const plugins = [injectHTML()];
+const plugins = [
+  injectHTML(),
+  setWebManifestVersion(),
+  generateUpdateManifest(),
+];
 
 if (process.env.NODE_ENV === "production") {
   const key = wbnSign.parsePemKey(process.env.SIGNING_KEY);
@@ -63,3 +68,53 @@ export default defineConfig({
     },
   },
 });
+
+// Sets the VERSION env variable in the web manifest file.
+//
+// This is a vite plugin. See https://vite.dev/guide/api-plugin.
+function setWebManifestVersion() {
+  const setVersion = (version) => {
+    const WEBMANIFEST = "public/.well-known/manifest.webmanifest";
+    const manifest = JSON.parse(fs.readFileSync(WEBMANIFEST, "utf-8"));
+    if (manifest.version === version) return;
+    manifest.version = version;
+    fs.writeFileSync(WEBMANIFEST, JSON.stringify(manifest, null, 2) + "\n");
+  };
+  return {
+    name: "borderless:set-manifest-version",
+    apply: "build",
+    buildStart: () => {
+      const version = process.env.VERSION;
+      if (version) setVersion(version.replace("v", ""));
+    },
+    closeBundle: () => setVersion("0.0.0"),
+  };
+}
+
+// Reads versions from git in the TAGS env variable and creates an update-manifest.json.
+function generateUpdateManifest() {
+  let out_dir;
+  return {
+    name: "borderless:generate-update-manifest-json",
+    apply: "build",
+    configResolved: (config) => (out_dir = config.build.outDir),
+    writeBundle: () => {
+      const tags = process.env.TAGS;
+      if (!tags) return;
+
+      const update_manifest = {
+        versions: JSON.parse(tags).map(({ ref }) => {
+          const version = ref.replace("refs/tags/v", "");
+          return {
+            version,
+            src: `https://github.com/edman/borderless-demo-app/releases/download/v${version}/borderless-demo.swbn`,
+          };
+        }),
+      };
+      fs.writeFileSync(
+        `${out_dir}/update-manifest.json`,
+        JSON.stringify(update_manifest, null, 2),
+      );
+    },
+  };
+}
