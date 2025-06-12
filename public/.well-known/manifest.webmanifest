@@ -8,11 +8,13 @@
   "display_override": [
     "borderless"
   ],
+  "borderless_url_patterns": [
+    {
+      "pathname": "/modal/*"
+    }
+  ],
   "permissions_policy": {
     "window-management": [
-      "self"
-    ],
-    "fullscreen": [
       "self"
     ],
     "cross-origin-isolated": [

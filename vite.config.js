@@ -16,6 +16,7 @@
 
 import { defineConfig } from "vite";
 
+import { resolve } from "path";
 import dotenv from "dotenv";
 import fs from "fs";
 import wbn from "rollup-plugin-webbundle";
@@ -48,6 +49,8 @@ if (process.env.NODE_ENV === "production") {
 
 export default defineConfig({
   plugins,
+  root: resolve(__dirname, "src"),
+  publicDir: resolve(__dirname, "public"),
   server: {
     port: 5193,
     strictPort: true,
@@ -61,9 +64,12 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: resolve(__dirname, "dist"),
+    emptyOutDir: true, // Stops a warning about overwriting outDir since it's outsite `root`.
     rollupOptions: {
       input: {
-        main: "index.html",
+        index: resolve(__dirname, "src/index.html"),
+        window: resolve(__dirname, "src/modal/window.html"),
       },
     },
   },
@@ -98,7 +104,7 @@ function generateUpdateManifest() {
     name: "borderless:generate-update-manifest-json",
     apply: "build",
     configResolved: (config) => (out_dir = config.build.outDir),
-    writeBundle: () => {
+    closeBundle: () => {
       const tags = process.env.TAGS;
       if (!tags) return;
 
