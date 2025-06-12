@@ -8,6 +8,11 @@
   "display_override": [
     "borderless"
   ],
+  "borderless_url_patterns": [
+    {
+      "pathname": "borderless_paths/*"
+    }
+  ],
   "permissions_policy": {
     "window-management": [
       "self"
